@@ -69,13 +69,9 @@ const getAllBooksHandler = (request, h) => {
 
   if (name !== undefined) {
     listBooks = books.filter((book) => book.name.toLowerCase().includes(name.toLowerCase()))
-  }
-
-  if (reading !== undefined) {
+  } else if (reading !== undefined) {
     listBooks = books.filter((book) => Number(book.reading) === Number(reading))
-  }
-
-  if (finished !== undefined) {
+  } else if (finished !== undefined) {
     listBooks = books.filter((book) => Number(book.finished) === Number(finished))
   }
 
