@@ -3,17 +3,7 @@ const books = require('./books')
 
 // Handler menyimpan buku
 const addBookHandler = (request, h) => {
-  const {
-    name,
-    year,
-    author,
-    summary,
-    publisher,
-    pageCount,
-    readPage,
-    reading
-  } = request.payload
-
+  const { name, year, author, summary, publisher, pageCount, readPage, reading } = request.payload
   const id = nanoid(16)
   const insertedAt = new Date().toISOString()
   const updatedAt = insertedAt
@@ -29,8 +19,7 @@ const addBookHandler = (request, h) => {
   } else if (readPage > pageCount) {
     const response = h.response({
       status: 'fail',
-      message:
-        'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount'
+      message: 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount'
     })
     response.code(400)
     return response
@@ -51,7 +40,7 @@ const addBookHandler = (request, h) => {
     updatedAt
   }
   books.push(newBook)
-  const isSuccess = books.filter(book => book.id === id).length > 0
+  const isSuccess = books.filter((book) => book.id === id).length > 0
 
   if (isSuccess) {
     const response = h.response({
@@ -76,27 +65,24 @@ const addBookHandler = (request, h) => {
 // Handler Menampilkan Buku
 const getAllBooksHandler = (request, h) => {
   const { name, reading, finished } = request.query
-
   let listBooks = books
 
   if (name !== undefined) {
-    listBooks = books.filter(book =>
-      book.name.toLowerCase().includes(name.toLowerCase())
-    )
+    listBooks = books.filter((book) => book.name.toLowerCase().includes(name.toLowerCase()))
   }
 
   if (reading !== undefined) {
-    listBooks = books.filter(book => Number(book.reading) === Number(reading))
+    listBooks = books.filter((book) => Number(book.reading) === Number(reading))
   }
 
   if (finished !== undefined) {
-    listBooks = books.filter(book => Number(book.finished) === Number(finished))
+    listBooks = books.filter((book) => Number(book.finished) === Number(finished))
   }
 
   const response = h.response({
     status: 'success',
     data: {
-      books: listBooks.map(book => ({
+      books: listBooks.map((book) => ({
         id: book.id,
         name: book.name,
         publisher: book.publisher
@@ -110,8 +96,7 @@ const getAllBooksHandler = (request, h) => {
 // Handler menampilkan detail buku
 const getBookByIdHandler = (request, h) => {
   const { id } = request.params
-
-  const book = books.filter(b => b.id === id)[0]
+  const book = books.filter((b) => b.id === id)[0]
 
   if (book !== undefined) {
     const response = h.response({
@@ -134,21 +119,9 @@ const getBookByIdHandler = (request, h) => {
 // Handler mengubah data buku
 const editBookByIdHandler = (request, h) => {
   const { id } = request.params
-
-  const {
-    name,
-    year,
-    author,
-    summary,
-    publisher,
-    pageCount,
-    readPage,
-    reading
-  } = request.payload
-
+  const { name, year, author, summary, publisher, pageCount, readPage, reading } = request.payload
   const updatedAt = new Date().toISOString()
-
-  const index = books.findIndex(book => book.id === id)
+  const index = books.findIndex((book) => book.id === id)
 
   if (!name) {
     const response = h.response({
@@ -160,8 +133,7 @@ const editBookByIdHandler = (request, h) => {
   } else if (readPage > pageCount) {
     const response = h.response({
       status: 'fail',
-      message:
-        'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount'
+      message: 'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount'
     })
     response.code(400)
     return response
@@ -199,8 +171,8 @@ const editBookByIdHandler = (request, h) => {
 // Handler menghapus buku
 const deleteBookByIdHandler = (request, h) => {
   const { id } = request.params
+  const index = books.findIndex((book) => book.id === id)
 
-  const index = books.findIndex(book => book.id === id)
   if (index !== -1) {
     books.splice(index, 1)
     const response = h.response({
